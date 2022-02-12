@@ -145,6 +145,27 @@ public final class PictureSelector {
 
     /**
      * set preview image
+     *自定义
+     * @param position
+     * @param medias
+     */
+    public void externalPicturePreviewCar(int position, List<LocalMedia> medias, int enterAnimation) {
+        if (!DoubleUtils.isFastDoubleClick()) {
+            if (getActivity() != null) {
+                Intent intent = new Intent(getActivity(), PictureCarPreviewActivity.class);
+                intent.putParcelableArrayListExtra(PictureConfig.EXTRA_PREVIEW_SELECT_LIST,
+                        (ArrayList<? extends Parcelable>) medias);
+                intent.putExtra(PictureConfig.EXTRA_POSITION, position);
+                getActivity().startActivity(intent);
+                getActivity().overridePendingTransition(enterAnimation != 0
+                        ? enterAnimation : R.anim.picture_anim_enter, R.anim.picture_anim_fade_in);
+            } else {
+                throw new NullPointerException("Starting the PictureSelector Activity cannot be empty ");
+            }
+        }
+    }
+ /**
+     * set preview image
      *
      * @param position
      * @param medias

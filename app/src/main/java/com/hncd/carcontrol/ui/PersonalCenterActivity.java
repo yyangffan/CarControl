@@ -6,17 +6,27 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 import com.hncd.carcontrol.R;
 import com.hncd.carcontrol.base.CarBaseActivity;
+import com.hncd.carcontrol.bean.LoginBean;
+import com.hncd.carcontrol.bean.MessageNoBean;
 import com.hncd.carcontrol.dig_pop.LogoutDialog;
+import com.hncd.carcontrol.utils.CarHttp;
 import com.hncd.carcontrol.utils.CarShareUtil;
+import com.hncd.carcontrol.utils.HttpBackListener;
 import com.hncd.carcontrol.views.CircleImageView;
 import com.ljy.devring.DevRing;
 import com.superc.yyfflibrary.utils.titlebar.TitleUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 public class PersonalCenterActivity extends CarBaseActivity {
 
@@ -68,12 +78,11 @@ public class PersonalCenterActivity extends CarBaseActivity {
     }
 
     private void getData() {
-        mMineName.setText("我没有名字");
-        mMineAccounts.setText("12342");
-        mMineNum.setText("99");
+        mMineName.setText(mLoginBean.getData().getName());
+        mMineAccounts.setText(mUser_name);
         RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.icon_default).error(R.drawable.icon_default).circleCrop();
         Glide.with(this).load(R.drawable.icon_default).apply(requestOptions).into(mMineHead);
-
+        getMsgNum();
     }
 
     private void loginOut() {
@@ -85,8 +94,38 @@ public class PersonalCenterActivity extends CarBaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        ToastShow("获取消息数量进行重置");
+        getMsgNum();
 
     }
 
+    /*获取未读消息数量*/
+    private void getMsgNum(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", mUser_id);
+        String result = new Gson().toJson(map);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), result);
+        CarHttp.getInstance().toGetData(CarHttp.getInstance().getApiService().getNoReadMessageNum(requestBody), new HttpBackListener() {
+            @Override
+            public void onSuccessListener(Object result) {
+                super.onSuccessListener(result);
+                MessageNoBean bean = new Gson().fromJson(result.toString(), MessageNoBean.class);
+                if (bean.getCode() == 200) {
+                    Integer num = bean.getData().getNum();
+                    if(num>0){
+                        mMineNum.setVisibility(View.VISIBLE);
+                        mMineNum.setText(num.toString());
+                    }else{
+                        mMineNum.setVisibility(View.GONE);
+                    }
+                } else {
+                    ToastShow(bean.getMsg());
+                }
+            }
+
+            @Override
+            public void onErrorLIstener(String error) {
+                super.onErrorLIstener(error);
+            }
+        });
+    }
 }

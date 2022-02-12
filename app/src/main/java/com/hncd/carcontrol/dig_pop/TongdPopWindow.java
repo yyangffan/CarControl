@@ -9,6 +9,7 @@ import android.widget.PopupWindow;
 
 import com.hncd.carcontrol.R;
 import com.hncd.carcontrol.adapter.TadPopAdapter;
+import com.hncd.carcontrol.bean.CheckAllBean;
 import com.hncd.carcontrol.utils.ItemRecyDecoration;
 
 import java.util.List;
@@ -21,12 +22,12 @@ public class TongdPopWindow extends PopupWindow {
     private Context mContext;
     private View mV;
     private RecyclerView mRecy;
-    private List<Map<String,Object>> mLists;
+    private List<CheckAllBean.DataBean.CheckLineBean> mLists;
     private String now_tv = "";
     private TadPopAdapter mTadPopAdapter;
     private OnAdapterClickListener mOnAdapterClickListener;
 
-    public TongdPopWindow(Context context, List<Map<String, Object>> lists, String now_t, int width, int height) {
+    public TongdPopWindow(Context context, List<CheckAllBean.DataBean.CheckLineBean> lists, String now_t, int width, int height) {
         super(width,200);
         mContext = context;
         mLists = lists;
@@ -50,8 +51,8 @@ public class TongdPopWindow extends PopupWindow {
         mTadPopAdapter.setOnItemClickListener(new TadPopAdapter.OnItemClickListener() {
             @Override
             public void onItemClickListener(int position) {
-                Map<String, Object> stringObjectMap = mLists.get(position);
-                String name = (String)stringObjectMap.get("name");
+                CheckAllBean.DataBean.CheckLineBean stringObjectMap = mLists.get(position);
+                String name = stringObjectMap.getLineNo();
                 if(mOnAdapterClickListener!=null){
                     mOnAdapterClickListener.onAdapterListener(name);
                     dismiss();

@@ -17,7 +17,9 @@ public class CarShareUtil {
     private static Context mContext;
     public static final String APP_AGREE = "app_agree";//是否同意了用户协议
     public static final String APP_BASEURL ="APPBASEURL";//项目的服务器地址
+    public static final String APP_USERINFO = "APPUSERINFO";//存储LoginBean
     public static final String APP_USERID = "APPUSERID";//接口访问的唯一标识
+    public static final String APP_USERNAME = "APPUSERNAME";//userName
 
     private CarShareUtil() {
     }

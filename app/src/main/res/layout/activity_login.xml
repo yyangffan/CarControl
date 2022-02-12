@@ -93,7 +93,7 @@
         android:hint="请输入您的身份证号码"
         android:lines="1"
         android:textSize="14sp"
-        android:text="admin"
+        android:text="130730198802241415"
         app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="@+id/textView2"
         app:layout_constraintStart_toEndOf="@+id/textView"

@@ -3,6 +3,7 @@ package com.hncd.carcontrol.ui;
 import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import com.hncd.carcontrol.R;
 import com.hncd.carcontrol.base.CarBaseActivity;
 import com.hncd.carcontrol.base.Constant;
 import com.hncd.carcontrol.bean.BaseBean;
+import com.hncd.carcontrol.bean.RegistInforBean;
 import com.hncd.carcontrol.utils.CarHttp;
 import com.hncd.carcontrol.utils.CarShareUtil;
 import com.hncd.carcontrol.utils.HttpBackListener;
@@ -108,7 +110,6 @@ public class CancelCheckActivity extends CarBaseActivity {
         if (resultCode == -1) {
             switch (requestCode) {
                 case REQUEST_CODE_SCAN:
-                    ToastShow("扫描成功");
                     if (data != null) {
                         String content = data.getStringExtra(Constant.CODED_CONTENT);
                         toComit(content);
@@ -119,9 +120,10 @@ public class CancelCheckActivity extends CarBaseActivity {
         }
     }
 
-    private void toComit(String code){
+    /*开始查验*/
+    private void toComit(String code) {
         Map<String, Object> map = new HashMap<>();
-        map.put("userName", mUser_id);
+        map.put("userName", mUser_name);
         map.put("serialNumber", code);
         String result = new Gson().toJson(map);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), result);
@@ -129,10 +131,13 @@ public class CancelCheckActivity extends CarBaseActivity {
             @Override
             public void onSuccessListener(Object result) {
                 super.onSuccessListener(result);
-                BaseBean bean = new Gson().fromJson(result.toString(), BaseBean.class);
+                RegistInforBean bean = new Gson().fromJson(result.toString(), RegistInforBean.class);
                 if (bean.getCode() == 200) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("data",code);
+                    bundle.putString("bean",result.toString());
                     Intent intent = new Intent(CancelCheckActivity.this, CheckResultActivity.class);
-                    intent.putExtra("data", code);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                     finish();
                 } else {

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="40dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="20dp"
+    android:layout_marginRight="40dp"
+    android:background="@drawable/bg_corner_white"
+    android:orientation="vertical"
+    tools:ignore="ResourceName">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/dig_photo_recy"
+        android:background="#DBDBDB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

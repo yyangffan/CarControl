@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hncd.carcontrol.R;
+import com.hncd.carcontrol.bean.MessageListBean;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,11 +19,13 @@ import butterknife.ButterKnife;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
     private Context mContext;
-    private List<String> mLists;
+    private List<MessageListBean.DataBean> mLists;
     private LayoutInflater mInflater;
     private OnItemClickListener mOnItemClickListener;
+    private SimpleDateFormat mSimpleDateFormat;
 
-    public MessageAdapter(Context context, List<String> stringList) {
+    public MessageAdapter(Context context, List<MessageListBean.DataBean> stringList) {
+        mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         mContext = context;
         mLists = stringList;
         mInflater = LayoutInflater.from(mContext);
@@ -39,10 +44,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder vh, int position) {
-        String bean = mLists.get(position);
-        vh.mItemMsgTitle.setText("消息"+position);
-        vh.mItemMsgDate.setText("2022-02-1"+position);
-        vh.mItemMsgContent.setText("消息主体，消息主体，消息主体，消息主体，消息主体，消息主体，消息主体，消息主体，消息主体，消息主体");
+        MessageListBean.DataBean bean = mLists.get(position);
+        vh.mItemMsgTitle.setText(bean.getTitile());
+        vh.mItemMsgDate.setText(mSimpleDateFormat.format(new Date(bean.getCreatetime())));
+        vh.mItemMsgContent.setText(bean.getContent());
 
     }
 

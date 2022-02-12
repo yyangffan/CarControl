@@ -45,4 +45,6 @@ dependencies {
     implementation "androidx.transition:transition:1.4.1"
     implementation "androidx.camera:camera-lifecycle:1.1.0-alpha10"
     implementation "com.github.bumptech.glide:glide:4.9.0"
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 }

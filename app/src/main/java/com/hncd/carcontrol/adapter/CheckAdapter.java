@@ -1,12 +1,14 @@
 package com.hncd.carcontrol.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hncd.carcontrol.R;
+import com.hncd.carcontrol.bean.RegistInforBean;
 
 import java.util.List;
 import java.util.Map;
@@ -17,11 +19,11 @@ import butterknife.ButterKnife;
 
 public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.ViewHolder> {
     private Context mContext;
-    private List<Map<String, Object>> mLists;
+    private List<RegistInforBean.DataBean.RegInfoBean> mLists;
     private LayoutInflater mInflater;
     private OnItemClickListener mOnItemClickListener;
 
-    public CheckAdapter(Context context, List<Map<String, Object>> stringList) {
+    public CheckAdapter(Context context, List<RegistInforBean.DataBean.RegInfoBean> stringList) {
         mContext = context;
         mLists = stringList;
         mInflater = LayoutInflater.from(mContext);
@@ -40,11 +42,11 @@ public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder vh, int position) {
-        Map<String, Object> bean = mLists.get(position);
-        String title = (String) bean.get("title");
-        String content = (String) bean.get("content");
+        RegistInforBean.DataBean.RegInfoBean bean = mLists.get(position);
+        String title = bean.getName();
+        String content = bean.getValue();
         vh.mItemCheckTitle.setText(title);
-        vh.mItemCheckContent.setText(content);
+        vh.mItemCheckContent.setText(TextUtils.isEmpty(content)?"":content);
 
     }
 

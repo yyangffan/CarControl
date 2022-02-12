@@ -2,7 +2,9 @@ package com.luck.picture.lib;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,15 +13,20 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.luck.picture.lib.adapter.PictcusAdapter;
+import com.luck.picture.lib.bean.CheckItemPhotoBean;
 import com.luck.picture.lib.camera.CustomCameraType;
 import com.luck.picture.lib.camera.CustomCameraView;
 import com.luck.picture.lib.camera.listener.CameraListener;
@@ -27,6 +34,7 @@ import com.luck.picture.lib.camera.view.CaptureLayout;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.config.PictureSelectionConfig;
+import com.luck.picture.lib.dialog.DigPhopro;
 import com.luck.picture.lib.dialog.PictureCustomDialog;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnPermissionDialogOptionCallback;
@@ -55,12 +63,20 @@ public class PictureCustomCameraActivity extends PictureSelectorCameraEmptyActiv
     protected boolean isEnterSetting;
     private ImageView mimg_take;
     private RecyclerView mrecy_cam;
-    private TextView mTextWaterMarker,mTextWatShow;
+    private TextView mTextWaterMarker, mTextWatShow;
+    private TextView mtv_check;
+    private TextView mtv_title;             //完成拍照时展示
+    private RelativeLayout mRelat_confir;   //完成拍照时展示
+    private ImageView mimgv_success, mimgv_failed;//完成拍照时展示
+
     private List<LocalMedia> mCusImgvs;
+    private List<CheckItemPhotoBean> mCheckItemPhotoLists;
     private PictcusAdapter mPictcusAdapter;
     private int now_count = 0;
     private String mWatermark;
     private Bitmap mBit_waterMarkers;
+    private boolean mSingleBack;
+    private int nowImgPos ;           //当前已选择的拍照项目在图片列表的位置标识--默认为新增
 
     @Override
     public boolean isImmersive() {
@@ -82,12 +98,25 @@ public class PictureCustomCameraActivity extends PictureSelectorCameraEmptyActiv
         Intent intent = getIntent();
         mWatermark = intent.getStringExtra("watermark");
         mCusImgvs = intent.getParcelableArrayListExtra("data");
+        mSingleBack = intent.getBooleanExtra("singleBack", false);
+        mCheckItemPhotoLists = intent.getParcelableArrayListExtra("project_photo");
         setContentView(R.layout.picture_custom_camera);
         mCameraView = findViewById(R.id.cameraView);
         mimg_take = findViewById(R.id.pic_cus_takpic);
         mrecy_cam = findViewById(R.id.pic_cus_recy);
         mTextWaterMarker = findViewById(R.id.pic_cus_watermarker);
+        mtv_check = findViewById(R.id.pic_cus_check);
         mTextWatShow = findViewById(R.id.pic_cus_watermarkershow);
+        //完成拍照时展示
+        mtv_title = findViewById(R.id.pic_cus_title);
+        mRelat_confir = findViewById(R.id.pic_cus_confir);
+        mimgv_success = findViewById(R.id.pic_cus_success);
+        mimgv_failed = findViewById(R.id.pic_cus_restore);
+        if (mSingleBack) {
+            mtv_check.setVisibility(View.GONE);
+            mrecy_cam.setVisibility(View.GONE);
+        }
+        nowImgPos = mCusImgvs.size();//新增
         initView();
         requestCamera();
     }
@@ -163,8 +192,8 @@ public class PictureCustomCameraActivity extends PictureSelectorCameraEmptyActiv
             }
         }.start();
         //设置数据展示
-        mPictcusAdapter = new PictcusAdapter(this,mCusImgvs);
-        LinearLayoutManager linearLayoutManager  =new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        mPictcusAdapter = new PictcusAdapter(this, mCusImgvs);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mrecy_cam.setLayoutManager(linearLayoutManager);
         mrecy_cam.setAdapter(mPictcusAdapter);
         mPictcusAdapter.setOnItemClickListener(new PictcusAdapter.OnItemClickListener() {
@@ -201,16 +230,7 @@ public class PictureCustomCameraActivity extends PictureSelectorCameraEmptyActiv
         mCameraView.setCameraListener(new CameraListener() {
             @Override
             public void onPictureSuccess(@NonNull String url) {
-                config.cameraMimeType = PictureMimeType.ofImage();
-                Intent intent = new Intent();
-                intent.putExtra(PictureConfig.EXTRA_MEDIA_PATH, url);
-                intent.putExtra(PictureConfig.EXTRA_CONFIG, config);
-                if (config.camera) {
-                    dispatchHandleCamera(intent);
-                } else {
-                    setResult(RESULT_OK, intent);
-                    onBackPressed();
-                }
+                shwoConfir(true, url);
             }
 
             @Override
@@ -247,25 +267,164 @@ public class PictureCustomCameraActivity extends PictureSelectorCameraEmptyActiv
                 mCameraView.goTakePicture();
             }
         });
+        mtv_check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDigPhopro.show();
+            }
+        });
+        mPictcusAdapter.setOnItemClickListener(new PictcusAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClickListener(int pos) {
+            /*    PictureSelector.create(PictureCustomCameraActivity.this)
+                        .themeStyle(R.style.picture_default_style) // xml设置主题
+                        //.setPictureWindowAnimationStyle(animationStyle)// 自定义页面启动动画
+                        .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)// 设置相册Activity方向，不设置默认使用系统
+                        .isNotPreviewDownload(true)// 预览图片长按是否可以下载
+                        //.bindCustomPlayVideoCallback(new MyVideoSelectedPlayCallback(getContext()))// 自定义播放回调控制，用户可以使用自己的视频播放界面
+                        .imageEngine(GlideEngine.createGlideEngine())// 外部传入图片加载引擎，必传项
+                        .openExternalPreview(position, mCusImgvs);*/
+                Intent intent = new Intent(PictureCustomCameraActivity.this,PicPriewActivity.class);
+                intent.putExtra("path",mCusImgvs.get(pos).getPath());
+                startActivity(intent);
+
+
+           /*     Intent intent = new Intent(PictureCustomCameraActivity.this, PictureCarPreviewActivity.class);
+                intent.putParcelableArrayListExtra(PictureConfig.EXTRA_PREVIEW_SELECT_LIST,
+                        (ArrayList<? extends Parcelable>) mCusImgvs);
+                intent.putExtra(PictureConfig.EXTRA_POSITION, pos);
+                startActivity(intent);*/
+            }
+        });
+        initDigAndShow();
     }
 
+    /*初始化点选弹窗  以及刚进入时的拍照项目设置*/
+    private int select_pos = 0;
+    private DigPhopro mDigPhopro;
+    private void initDigAndShow() {
+        for (int i = 0; i < mCheckItemPhotoLists.size(); i++) {
+            CheckItemPhotoBean bean = mCheckItemPhotoLists.get(i);
+            boolean hasTake = bean.isHasTake();// true 已经拍过  false 未拍过
+            if (!hasTake) {
+                String takephoto = bean.getCheckItemCode() + " " + bean.getCheckItemName();
+                mtv_check.setText(takephoto);
+                mtv_title.setText(takephoto);
+                select_pos =i;
+                break;
+            }
+            if(i == mCheckItemPhotoLists.size() -1){
+                String takephoto = bean.getCheckItemCode() + " " + bean.getCheckItemName();
+                mtv_check.setText(takephoto);
+                mtv_title.setText(takephoto);
+                select_pos =i;
+                nowImgPos =bean.getImgPos();//修改
+            }
+        }
+        mDigPhopro = new DigPhopro(this,select_pos,mCheckItemPhotoLists);
+        mDigPhopro.setOnItemClickListener(new DigPhopro.OnItemClickListener() {
+            @Override
+            public void onItemclickListener(int pos, String title) {
+                CheckItemPhotoBean bean = mCheckItemPhotoLists.get(pos);
+                if(bean.isHasTake()){//修改
+                    nowImgPos =bean.getImgPos();
+                }else{//新增
+                    nowImgPos =mCusImgvs.size();
+                }
+                select_pos = pos;
+                mtv_check.setText(title);
+                mtv_title.setText(title);//还有后续
+            }
+        });
+
+
+
+    }
+
+
+    //展示确认界面
+    private void shwoConfir(boolean showConfir, @NonNull String url) {
+        if (mSingleBack) {
+            mtv_title.setVisibility(View.GONE);
+        } else {
+            mtv_title.setVisibility(showConfir ? View.VISIBLE : View.GONE);
+        }
+        mRelat_confir.setVisibility(showConfir ? View.VISIBLE : View.GONE);
+        mimgv_success.setVisibility(showConfir ? View.VISIBLE : View.GONE);
+        mimgv_failed.setVisibility(showConfir ? View.VISIBLE : View.GONE);
+        if (!TextUtils.isEmpty(url)) {
+            mimgv_success.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    config.cameraMimeType = PictureMimeType.ofImage();
+                    Intent intent = new Intent();
+                    intent.putExtra(PictureConfig.EXTRA_MEDIA_PATH, url);
+                    intent.putExtra(PictureConfig.EXTRA_CONFIG, config);
+                    if (config.camera) {
+                        dispatchHandleCamera(intent);
+                    } else {
+                        setResult(RESULT_OK, intent);
+                        onBackPressed();
+                    }
+                    shwoConfir(false, "");
+                }
+            });
+            mimgv_failed.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCameraView.onCancelMedia();
+                    shwoConfir(false, "");
+                }
+            });
+        }
+
+    }
+
+    //拍完图片后的回调
     @Override
     public void onPicResult(List<LocalMedia> images) {
         super.onPicResult(images);
+        if (mSingleBack) {
+            finish();
+            return;
+        }
         mCameraView.resetState();
-        String pic_path = images.get(0).getPath();
-        LocalMedia localMedia = mCusImgvs.get(now_count);
-        localMedia.setPath(pic_path);
-        mPictcusAdapter.notifyItemChanged(now_count);
+        if(nowImgPos ==mCusImgvs.size()){//新增
+            LocalMedia localMedia = images.get(0);
+            localMedia.setTitle(mtv_check.getText().toString());
+            mCusImgvs.add(localMedia);
+            mPictcusAdapter.notifyItemInserted(nowImgPos);
+        }else{//修改
+            LocalMedia localMedia = mCusImgvs.get(nowImgPos);
+            localMedia.setPath(images.get(0).getPath());
+            mPictcusAdapter.notifyItemChanged(nowImgPos);
+        }
+
+        //通知调用界面进行数据更新
         if (PictureSelectionConfig.listener != null) {
-            PictureSelectionConfig.listener.onCusResult(images,now_count);
+            PictureSelectionConfig.listener.onCusResult(images, select_pos,nowImgPos);
         }
-        if(now_count<mCusImgvs.size()-1){
-            now_count+=1;
+        /*自动选中下一个*/
+        if (select_pos!=mCheckItemPhotoLists.size()-1){
+            mCheckItemPhotoLists.get(select_pos).setHasTake(true);
+            mCheckItemPhotoLists.get(select_pos).setImgPos(nowImgPos);
+            select_pos+=1;
+            mDigPhopro.setSelect_pos(select_pos);
+            String title = mCheckItemPhotoLists.get(select_pos).getCheckItemCode()+":"+mCheckItemPhotoLists.get(select_pos).getCheckItemName();
+            mtv_check.setText(title);
+            mtv_title.setText(title);//还有后续
+            CheckItemPhotoBean bean =mCheckItemPhotoLists.get(select_pos);
+            if(bean.isHasTake()){
+                nowImgPos =bean.getImgPos();
+            }else{
+                nowImgPos =mCusImgvs.size();
+            }
+
         }
-        mrecy_cam.scrollToPosition(now_count);
-        togeBit(BitmapFactory.decodeFile(pic_path),new File(pic_path));
-        Log.e(TAG, "onPicResult: 拍照结束"+pic_path );
+
+
+//        togeBit(BitmapFactory.decodeFile(pic_path), new File(pic_path));
+//        Log.e(TAG, "onPicResult: 拍照结束" + pic_path);
 
     }
 
@@ -288,7 +447,7 @@ public class PictureCustomCameraActivity extends PictureSelectorCameraEmptyActiv
         canvas.restore();
         BitmapUtils.saveBitmapFile(bitmap, file);//保存图片到本地*/
 //        Bitmap bitmap_result = ImageUtil.drawTextToLeftTop(this,bitmap,mWatermark,36,R.color.ucrop_color_active_controls_color,10,10);
-        Bitmap bitmap_result = ImageUtil.createWaterMaskBitmap(bitmap,mBit_waterMarkers,10,10);
+        Bitmap bitmap_result = ImageUtil.createWaterMaskBitmap(bitmap, mBit_waterMarkers, 10, 10);
         BitmapUtils.saveBitmapFile(bitmap_result, file);//保存图片到本地
     }
 

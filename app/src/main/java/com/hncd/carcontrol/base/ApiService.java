@@ -1,5 +1,6 @@
 package com.hncd.carcontrol.base;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import io.reactivex.Observable;
@@ -35,4 +36,38 @@ public interface ApiService {
     @POST("cancellation/getRegInfo")
     Observable<JSONObject> getRegInfo(@Body RequestBody body);
 
+    /**
+     * 获取配置项目（查验项目、拍照项目、通道）
+     *
+     * @param body
+     * @return
+     */
+    @POST("cancellation/getSetItem")
+    Observable<JSONObject> getSetItem(@Body RequestBody body);
+
+    /**
+     *根据用户ID获取消息未读数量
+     *
+     * @param body
+     * @return
+     */
+    @POST("cancellation/getNoReadMessageNum")
+    Observable<JSONObject> getNoReadMessageNum(@Body RequestBody body);
+ /**
+     * 根据用户ID更新已读
+     *
+     * @param body
+     * @return
+     */
+    @POST("cancellation/upMessageReadStatusByUserId")
+    Observable<JSONObject> upMessageReadStatusByUserId(@Body RequestBody body);
+
+    /**
+     * 获取消息列表
+     *
+     * @param body
+     * @return
+     */
+    @POST("cancellation/getMessageInfo")
+    Observable<JSONObject> getMessageInfo(@Body RequestBody body);
 }

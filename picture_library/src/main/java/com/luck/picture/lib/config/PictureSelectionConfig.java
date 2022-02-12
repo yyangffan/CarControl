@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.luck.picture.lib.R;
+import com.luck.picture.lib.bean.CheckItemPhotoBean;
 import com.luck.picture.lib.camera.CustomCameraType;
 import com.luck.picture.lib.engine.CompressEngine;
 import com.luck.picture.lib.engine.ImageEngine;
@@ -190,6 +191,8 @@ public final class PictureSelectionConfig implements Parcelable {
     /*自定义拍照专用*/
     public String waterMark= "";
     public List<LocalMedia> mImageBeans;
+    public boolean singleBack;
+    public List<CheckItemPhotoBean> mCheckItemPhotoLists;
 
 
     protected PictureSelectionConfig(Parcel in) {

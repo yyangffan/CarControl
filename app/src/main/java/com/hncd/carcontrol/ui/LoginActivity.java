@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.hncd.carcontrol.R;
 import com.hncd.carcontrol.base.CarBaseActivity;
 import com.hncd.carcontrol.bean.BaseBean;
+import com.hncd.carcontrol.bean.LoginBean;
 import com.hncd.carcontrol.utils.CarHttp;
 import com.hncd.carcontrol.utils.CarShareUtil;
 import com.hncd.carcontrol.utils.HttpBackListener;
@@ -43,7 +44,7 @@ public class LoginActivity extends CarBaseActivity {
         ButterKnife.bind(this);
         TitleUtils.setStatusTextColor(true, this);
         mApp_url = (String) CarShareUtil.getInstance().get(CarShareUtil.APP_BASEURL, "");
-        if (!TextUtils.isEmpty(mUser_id)) {
+        if (!TextUtils.isEmpty(mUser_name)) {
             statActivity(MainActivity.class);
             finish();
         }
@@ -89,9 +90,11 @@ public class LoginActivity extends CarBaseActivity {
             @Override
             public void onSuccessListener(Object result) {
                 super.onSuccessListener(result);
-                BaseBean bean = new Gson().fromJson(result.toString(), BaseBean.class);
+                LoginBean bean = new Gson().fromJson(result.toString(), LoginBean.class);
                 if (bean.getCode() == 200) {
-                    CarShareUtil.getInstance().put(CarShareUtil.APP_USERID, sfz);
+                    CarShareUtil.getInstance().put(CarShareUtil.APP_USERINFO,result.toString());
+                    CarShareUtil.getInstance().put(CarShareUtil.APP_USERNAME, sfz);
+                    CarShareUtil.getInstance().put(CarShareUtil.APP_USERID, bean.getData().getUserIdX());
                     statActivity(MainActivity.class);
                     finish();
                 } else {

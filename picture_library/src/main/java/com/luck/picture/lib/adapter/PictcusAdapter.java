@@ -38,7 +38,7 @@ public class PictcusAdapter extends RecyclerView.Adapter<PictcusAdapter.ViewHold
     public void onBindViewHolder(@NonNull PictcusAdapter.ViewHolder holder, int position) {
         LocalMedia bean = mLists.get(position);
         RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.default_pic).error(R.drawable.default_pic);
-        holder.mitemTxt.setText("0103车辆识别代码：我弄个你问哦"+position);
+//        holder.mitemTxt.setText("0103车辆识别代码：我弄个你问哦"+position);
         Glide.with(mContext).load(bean.getPath()).apply(requestOptions).into(holder.mItemImgv);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

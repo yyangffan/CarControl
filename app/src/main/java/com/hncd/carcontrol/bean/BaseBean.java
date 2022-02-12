@@ -1,6 +1,8 @@
 package com.hncd.carcontrol.bean;
 
-public class BaseBean {
+import java.io.Serializable;
+
+public class BaseBean implements Serializable {
    /*{"msg":"用户名或密码错误！","code":500}*/
    private String msg;
    private int code;

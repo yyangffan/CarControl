@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hncd.carcontrol.R;
+import com.hncd.carcontrol.bean.CheckAllBean;
 
 import java.util.List;
 import java.util.Map;
@@ -18,13 +19,13 @@ import butterknife.ButterKnife;
 
 public class TadPopAdapter extends RecyclerView.Adapter<TadPopAdapter.ViewHolder> {
     private Context mContext;
-    private List<Map<String, Object>> mLists;
+    private List<CheckAllBean.DataBean.CheckLineBean> mLists;
     private String now_txt = "";
     private LayoutInflater mInflater;
     private OnItemClickListener mOnItemClickListener;
     private View clickView;
 
-    public TadPopAdapter(Context context,  List<Map<String, Object>> stringList, String now_t) {
+    public TadPopAdapter(Context context,  List<CheckAllBean.DataBean.CheckLineBean> stringList, String now_t) {
         mContext = context;
         mLists = stringList;
         now_txt = now_t;
@@ -45,10 +46,10 @@ public class TadPopAdapter extends RecyclerView.Adapter<TadPopAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder vh, int position) {
-        Map<String, Object> bean = mLists.get(position);
+        CheckAllBean.DataBean.CheckLineBean bean = mLists.get(position);
         vh.itemView.setTag(bean);
-        String name = (String) bean.get("name");
-        vh.mItemZizhiName.setText("通道："+name);
+        String name = bean.getLineNo();
+        vh.mItemZizhiName.setText(name);
         if (name.equals(now_txt)) {
             clickView = vh.itemView;
             vh.mItemZizhiName.setTextColor(Color.parseColor("#3A7AFD"));
@@ -65,8 +66,8 @@ public class TadPopAdapter extends RecyclerView.Adapter<TadPopAdapter.ViewHolder
                 TextView tv_new = view.findViewById(R.id.item_zizhi_name);
                 tv_new.setTextColor(mContext.getResources().getColor(R.color.appColor));
                 if (clickView != null) {
-                    Map<String, Object> bean_old = (Map<String, Object>) clickView.getTag();
-                    bean_old.put("pos", -1);
+                    CheckAllBean.DataBean.CheckLineBean bean_old = (CheckAllBean.DataBean.CheckLineBean) clickView.getTag();
+//                    bean_old.put("pos", -1);
                     TextView tv_old = view.findViewById(R.id.item_zizhi_name);
                     tv_old.setTextColor(mContext.getResources().getColor(R.color.black));
                 }

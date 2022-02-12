@@ -78,7 +78,7 @@ public class ChangepwdActivity extends CarBaseActivity {
             return;
         }
         Map<String, Object> map = new HashMap<>();
-        map.put("userName", mUser_id);
+        map.put("userName", mUser_name);
         map.put("pwd", pwd_twice);
         String result = new Gson().toJson(map);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), result);

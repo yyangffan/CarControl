@@ -445,6 +445,7 @@ public class CustomCameraView extends RelativeLayout {
             if (mImagePreviewReference.get() != null) {
                 mImagePreviewReference.get().setVisibility(View.VISIBLE);
             }
+            /*返回与确定按钮的展示*/
             if (mCaptureLayoutReference.get() != null) {
                 mCaptureLayoutReference.get().startTypeBtnAnimator();
             }

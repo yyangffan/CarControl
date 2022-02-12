@@ -1,5 +1,6 @@
 package com.hncd.carcontrol.ui;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.hncd.carcontrol.R;
 import com.hncd.carcontrol.base.CarBaseActivity;
+import com.hncd.carcontrol.bean.CheckAllBean;
 import com.hncd.carcontrol.dig_pop.TongdPopWindow;
 import com.superc.yyfflibrary.utils.titlebar.TitleUtils;
 
@@ -56,7 +58,8 @@ public class CheckEndActivity extends CarBaseActivity {
     private boolean is_suc = true;              //查验是否合格
     private String mnowDate;
     private TongdPopWindow mTongdPopWindow;
-    private List<Map<String, Object>> mTongd;
+    private List<CheckAllBean.DataBean.CheckLineBean> mTongd;
+    private CheckAllBean mBean;
 
 
     @Override
@@ -70,6 +73,9 @@ public class CheckEndActivity extends CarBaseActivity {
         TitleUtils.setStatusTextColor(false, this);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         mnowDate = simpleDateFormat.format(new Date());
+        Intent intent = getIntent();
+        String tongdao = intent.getStringExtra("tongdao");
+        mBean = new Gson().fromJson(tongdao, CheckAllBean.class);
         initView();
         getData();
     }
@@ -92,12 +98,8 @@ public class CheckEndActivity extends CarBaseActivity {
     private void initView(){
         mCheckEndName.requestFocus();
         mTongd = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("name", "1" + i);
-            mTongd.add(map);
-        }
-        mCheckEndTd.setText("10");
+        mTongd.addAll(mBean.getData().getCheckLine());
+        mCheckEndTd.setText(mTongd.get(0).getLineNo());
     }
 
     private void getData() {

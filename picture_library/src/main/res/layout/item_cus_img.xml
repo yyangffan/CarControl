@@ -19,6 +19,7 @@
         android:textSize="10sp"
         android:text="前照灯"
         android:maxLines="3"
+        android:visibility="gone"
         android:background="#22000000"
         android:ellipsize="end"
         android:gravity="center"

@@ -66,10 +66,11 @@
                 android:id="@+id/mine_num"
                 android:layout_width="@dimen/dp_18"
                 android:layout_height="@dimen/dp_18"
-                android:layout_marginRight="@dimen/dp_8"
+                android:layout_marginRight="@dimen/dp_3"
                 android:background="@drawable/bg_circle_red"
                 android:gravity="center"
-                android:text="99"
+                android:visibility="gone"
+                tools:text="99"
                 android:textColor="@color/white"
                 android:textSize="10sp" />
 

@@ -107,11 +107,11 @@ public class CaptureLayout extends FrameLayout {
         if (this.iconRight != 0)
             iv_custom_right.setVisibility(GONE);
         btn_capture.setVisibility(GONE);
-        btn_cancel.setVisibility(VISIBLE);
+        iv_custom_left.setVisibility(GONE);
+       /* btn_cancel.setVisibility(VISIBLE);
         btn_confirm.setVisibility(VISIBLE);
         btn_cancel.setClickable(false);
         btn_confirm.setClickable(false);
-        iv_custom_left.setVisibility(GONE);
         ObjectAnimator animator_cancel = ObjectAnimator.ofFloat(btn_cancel, "translationX", layout_width / 4, 0);
         ObjectAnimator animator_confirm = ObjectAnimator.ofFloat(btn_confirm, "translationX", -layout_width / 4, 0);
 
@@ -126,7 +126,7 @@ public class CaptureLayout extends FrameLayout {
             }
         });
         set.setDuration(500);
-        set.start();
+        set.start();*/
     }
 
 

@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.luck.picture.lib.animators.AnimationType;
+import com.luck.picture.lib.bean.CheckItemPhotoBean;
 import com.luck.picture.lib.camera.CustomCameraType;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -55,6 +56,16 @@ public class PictureSelectionModel {
     private final PictureSelector selector;
     public PictureSelectionModel setWaterMark(String watermark){
         selectionConfig.waterMark =watermark;
+        return this;
+    }
+
+    public PictureSelectionModel setSingleBack(boolean singleBack){
+        selectionConfig.singleBack =singleBack;
+        return this;
+    }
+
+    public PictureSelectionModel setPhotoLists(List<CheckItemPhotoBean> checkItemPhotoLists){
+        selectionConfig.mCheckItemPhotoLists = checkItemPhotoLists;
         return this;
     }
 
@@ -1673,7 +1684,9 @@ public class PictureSelectionModel {
             if (selectionConfig.camera && selectionConfig.isUseCustomCamera) {
                 intent = new Intent(activity, PictureCustomCameraActivity.class);
                 intent.putExtra("watermark",selectionConfig.waterMark);
+                intent.putExtra("singleBack",selectionConfig.singleBack);
                 intent.putParcelableArrayListExtra("data", (ArrayList<? extends Parcelable>) selectionConfig.mImageBeans);
+                intent.putParcelableArrayListExtra("project_photo",(ArrayList<? extends Parcelable>) selectionConfig.mCheckItemPhotoLists);
 
             } else {
                 intent = new Intent(activity, selectionConfig.camera
@@ -1763,6 +1776,22 @@ public class PictureSelectionModel {
             activity.overridePendingTransition(windowAnimationStyle.activityEnterAnimation, R.anim.picture_anim_fade_in);
         }
     }
+
+    /**
+     * 提供外部预览图片方法
+     *自定义
+     * @param position
+     * @param medias
+     */
+    public void openExternalPreviewCar(int position, List<LocalMedia> medias) {
+        if (selector != null) {
+            selector.externalPicturePreviewCar(position, medias, PictureSelectionConfig.windowAnimationStyle.activityPreviewEnterAnimation);
+        } else {
+            throw new NullPointerException("This PictureSelector is Null");
+        }
+    }
+
+
 
     /**
      * 提供外部预览图片方法

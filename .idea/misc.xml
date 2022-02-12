@@ -8,12 +8,37 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/app/src/main/res/drawable/bg_circle_gray.xml" value="0.169" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/app/src/main/res/drawable/bg_login.xml" value="0.195" />
         <entry key="..\:/a_android/Private_work/car_latest/car_control/app/src/main/res/layout/activity_changepwd.xml" value="0.2682291666666667" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/app/src/main/res/layout/activity_check_end.xml" value="0.2682291666666667" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/app/src/main/res/layout/activity_check_result.xml" value="0.2682291666666667" />
         <entry key="..\:/a_android/Private_work/car_latest/car_control/app/src/main/res/layout/activity_config_set.xml" value="0.26621847886098404" />
         <entry key="..\:/a_android/Private_work/car_latest/car_control/app/src/main/res/layout/activity_login.xml" value="0.2682291666666667" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/app/src/main/res/layout/activity_personal_center.xml" value="0.4033613316075515" />
         <entry key="..\:/a_android/Private_work/car_latest/car_control/app/src/main/res/layout/activity_picture_cus.xml" value="0.18342391304347827" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/app/src/main/res/layout/image_photo.xml" value="0.5405041843541191" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/app/src/main/res/layout/item_check_imgv.xml" value="0.5405041843541191" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/app/src/main/res/layout/item_msg.xml" value="0.4033613316075515" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/app/src/main/res/layout/item_recy_check.xml" value="0.2682291666666667" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/app/src/main/res/layout/item_recy_judge.xml" value="0.26621847886098404" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/drawable/bg_circle_grcy.xml" value="0.1665" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/drawable/bg_corner_white.xml" value="0.195" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/drawable/bg_solder_bl.xml" value="0.226" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/drawable/bg_solder_red.xml" value="0.226" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/drawable/bg_stro_gray.xml" value="0.173" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/drawable/bg_stro_white.xml" value="0.2285" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/drawable/pic_cus_reset.xml" value="0.1595" />
         <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/drawable/picture_image_placeholder.xml" value="0.1355" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/layout/activity_pic_priew.xml" value="0.2682291666666667" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/layout/dig_photo_proj.xml" value="0.2682291666666667" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/layout/item_cus_img.xml" value="0.2682291666666667" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/layout/item_dig_proj.xml" value="0.2682291666666667" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/layout/picture_activity_external_preview.xml" value="0.2682291666666667" />
         <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/layout/picture_camera_view.xml" value="0.2682291666666667" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/layout/picture_custom_camera.xml" value="0.20168066580377575" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/layout/picture_empty.xml" value="0.2682291666666667" />
+        <entry key="..\:/a_android/Private_work/car_latest/car_control/picture_library/src/main/res/layout/picture_prompt_dialog.xml" value="0.20168066580377575" />
         <entry key="..\:/workplace/car_latest/car_control/picture_library/src/main/res/layout/picture_camera_view.xml" value="0.37447916666666664" />
         <entry key="..\:/workplace/car_latest/car_control/picture_library/src/main/res/layout/picture_custom_camera.xml" value="0.37447916666666664" />
       </map>
